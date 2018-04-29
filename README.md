@@ -10,7 +10,14 @@ mean, std, min
 0.33420000000000005 0.06544585548375084 0.236
 
 #### Ensemble with regularization:
-highest accuracy: 0.453
+ensemble accuracy: 0.453
 
 mean, std, min
 0.35007999999999995 0.05676172654174642 0.246
+
+#### Ensemble with regularization and squared cross entropy loss
+ensemble_accuracy_so_far 0.443
+
+mean, std, min
+0.34629000000000004 0.061368443845351 0.247
+
