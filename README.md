@@ -1,5 +1,5 @@
 # MemN2N_Experiments
-Class project for DS-GA 1008 at NYU
+Class project for DS-GA 1008 at NYU to investigate ways to improve MemN2N performance on bAbI tasks
 
 **Test accuracy**
 
