@@ -1,5 +1,6 @@
 # MemN2N_Experiments
-Class project for DS-GA 1008 at NYU to investigate ways to improve MemN2N performance on bAbI tasks
+Class project for DS-GA 1008 at NYU to investigate ways to improve MemN2N performance on bAbI tasks. 
+Baseline code is from https://github.com/nmhkahn/MemN2N-pytorch. 
 
 **Test accuracy**
 
