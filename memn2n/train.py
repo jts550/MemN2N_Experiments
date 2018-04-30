@@ -14,6 +14,7 @@ def parse_config():
     parser.add_argument("--decay_interval", type=int, default=25)
     parser.add_argument("--decay_ratio", type=float, default=0.5)
     parser.add_argument("--max_clip", type=float, default=40.0)
+    parser.add_argument("--ensemble_size", type=int, default= 20)
 
     return parser.parse_args()
 
@@ -25,7 +26,7 @@ def main(config):
     correct_ensemble = []
     pred_prob_ensemble = []
     answer_ensemble = []
-    for _ in range(100):
+    for _ in range(config.ensemble_size):
         t = trainer.Trainer(config)
         acc = t.fit()
         accs.append(acc)

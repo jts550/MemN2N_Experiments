@@ -36,6 +36,8 @@ class Trainer():
         print("Average story length", self.train_data.mean_story_size)
         print("Number of vocab", self.train_data.num_vocab)
 
+        self.device = torch.device("cuda" if config.cuda else "cpu")
+
         self.mem_n2n = MemN2N(settings)
         self.ce_fn = nn.CrossEntropyLoss(size_average=False)
         self.opt = torch.optim.SGD(self.mem_n2n.parameters(), lr=config.lr, weight_decay=1e-5)
@@ -73,14 +75,9 @@ class Trainer():
         answers = np.zeros(0)
         loader = self.train_loader if data == "train" else self.test_loader
         for step, (story, query, answer) in enumerate(loader):
-            story = Variable(story)
-            query = Variable(query)
-            answer = Variable(answer)
-
-            if self.config.cuda:
-                story = story.cuda()
-                query = query.cuda()
-                answer = answer.cuda()
+            story = story.to(self.device)
+            query = query.to(self.device)
+            answer = answer.to(self.device)
 
             pred_prob = self.mem_n2n(story, query)[1]
             if ensemble:
@@ -97,14 +94,9 @@ class Trainer():
         config = self.config
         num_steps_per_epoch = len(self.train_loader)
         for step, (story, query, answer) in enumerate(self.train_loader):
-            story = Variable(story)
-            query = Variable(query)
-            answer = Variable(answer)
-
-            if config.cuda:
-                story = story.cuda()
-                query = query.cuda()
-                answer = answer.cuda()
+            story = story.to(self.device)
+            query = query.to(self.device)
+            answer = answer.to(self.device)
         
             self.opt.zero_grad()
             loss = self.ce_fn(self.mem_n2n(story, query)[0], answer)
@@ -114,12 +106,12 @@ class Trainer():
                 noise_stddev=1e-3, max_clip=config.max_clip)
             self.opt.step()
 
-        return loss.data[0]
+        return loss.item()
 
     def _gradient_noise_and_clip(self, parameters,
                                  noise_stddev=1e-3, max_clip=40.0):
         parameters = list(filter(lambda p: p.grad is not None, parameters))
-        nn.utils.clip_grad_norm(parameters, max_clip)
+        nn.utils.clip_grad_norm_(parameters, max_clip)
 
         for p in parameters:
             noise = torch.randn(p.size()) * noise_stddev
